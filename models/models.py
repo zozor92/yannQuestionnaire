@@ -4,10 +4,11 @@ db = SQLAlchemy()
 
 class Questions(db.Model):
     __tablename__ = 'questions'
-    id = db.Column('id', db.Integer, primary_key=True)
-    categoriesID = db.Column('categoriesID', db.Integer)
-    questions = db.Column('questions', db.String(120))
-    correctResponseID = db.Column('correctResponseID', db.Integer)
+    id = db.Column('questionID', db.Integer, primary_key=True)
+    question_txt = db.Column('Question text', db.String(120))
+    k_type = db.Column('Question type ID', db.Integer)
+    k_subtype = db.Column('Question subtype ID', db.Integer)
+    k_language = db.Column('Question Language ID', db.Integer)
 
     def __init__(self, questions=None, correctresid=None):
         self.questions = questions
@@ -29,9 +30,11 @@ class Questions(db.Model):
 
 class Responses(db.Model):
     __tablename__ = 'responses'
-    id = db.Column('id', db.Integer, primary_key=True)
-    commentaire = db.Column('commentaire', db.String(120))
-    questionID = db.Column('questionID', db.Integer)
+    responseID = db.Column('Response ID', db.Integer, primary_key=True)
+    questionID = db.Column('Question ID', db.Integer)
+    response_txt = db.Column('Text response', db.String(120))
+    k_correct_ind = db.Column('Correct indicator', db.Integer)
+    comments_txt = db.Column('Response comment', db.String(120))
 
     def __init__(self, commentaire=None, questionid=None):
         self.commentaire = commentaire
