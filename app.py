@@ -3,7 +3,7 @@ from models.models import Questions, Responses, db
 from random import randint
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://grocery_fetch@198.245.51.161/yannQuestionnaire'
+
 db.init_app(app)
 
 mathCatId = 1
