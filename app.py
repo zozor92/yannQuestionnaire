@@ -31,13 +31,11 @@ def get_onequestion():
 
 
 
-# TODO not working, return 5 math question or less with responses for each questions in a json format, should use the method questionrepbyCat(cat)
 @app.route('/api/1/questionMath', methods=['GET'])
 def get_questionMath():
-    tableIDQuestMath = []
-    for i in Questions.query.filter_by(categoriesID=mathCatId):
-        tableIDQuestMath.append(i.id)
-    return {"TODO"}
+    c = questionrepbyCat(mathCatId)
+    return jsonify(questions=c)
+
 
 
 @app.route('/api/1/questionStats', methods=['GET'])
@@ -60,9 +58,16 @@ def questionbyID(id):
 def responsesbyID(id):
     return [i.serialize for i in Responses.query.filter_by(questionID=id)]
 
-# TODO
 def questionrepbyCat(cat):
-    return "TODO"
+    tableIDQuestMath= []
+    myQuestiosnWithCat = Questions.query.filter_by(categoriesID=mathCatId)
+    for i in myQuestiosnWithCat:
+        tableIDQuestMath.append(i.id)
+    questionToPick = min(len(tableIDQuestMath), 5)
+    b = []
+    for i in range(0, questionToPick):
+        b.append({'question':questionbyID(tableIDQuestMath[i]), 'responses' : responsesbyID(tableIDQuestMath[0])})
+    return b
 
 
 @app.errorhandler(404)
