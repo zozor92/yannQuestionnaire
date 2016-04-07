@@ -3,7 +3,6 @@ from models.models import Questions, Responses, db
 from random import randint
 
 app = Flask(__name__)
-
 db.init_app(app)
 
 mathCatId = 1
@@ -28,15 +27,17 @@ def get_onequestion():
     for i in test:
         idQuestions.append(i.id)
     toPick = randint(1, len(idQuestions))
-    return questionbyID(toPick)
+    return jsonify(questions=questionbyID(toPick), responses=responsesbyID(toPick))
 
-#not working
+
+
+# TODO not working, return 5 math question or less with responses for each questions in a json format, should use the method questionrepbyCat(cat)
 @app.route('/api/1/questionMath', methods=['GET'])
 def get_questionMath():
-    table = []
+    tableIDQuestMath = []
     for i in Questions.query.filter_by(categoriesID=mathCatId):
-        table.append(questionbyID(i.id))
-    return jsonify(table)
+        tableIDQuestMath.append(i.id)
+    return {"TODO"}
 
 
 @app.route('/api/1/questionStats', methods=['GET'])
@@ -54,7 +55,14 @@ def get_questionStats():
 #    return jsonify(users=[i.serialize for i in Questions.query.all()])
 
 def questionbyID(id):
-    return jsonify(Questions.query.filter_by(id=id).first().serialize, responses=[i.serialize for i in Responses.query.filter_by(questionID=id)])
+    return Questions.query.filter_by(id=id).first().serialize
+
+def responsesbyID(id):
+    return [i.serialize for i in Responses.query.filter_by(questionID=id)]
+
+# TODO
+def questionrepbyCat(cat):
+    return "TODO"
 
 
 @app.errorhandler(404)
