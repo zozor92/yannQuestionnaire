@@ -22,7 +22,6 @@ class Questions(db.Model):
         return {
             'id': self.id,
             'categoriesID': self.categoriesID,
-            # This is an example how to deal with Many2Many relations
             'questions': self.questions,
             'correctResponseID': self.correctResponseID
         }
@@ -45,4 +44,20 @@ class Responses(db.Model):
             'id': self.id,
             'commentaire': self.commentaire,
             'questionID': self.questionID
+        }
+
+class Categories(db.Model):
+    __tablename__ = 'categories'
+    id = db.Column('id', db.Integer, primary_key=True)
+    name = db.Column('name', db.String(120))
+
+    def __init__(self, name=None):
+        self.name = name
+
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'id': self.id,
+            'categoriesID': self.name
         }

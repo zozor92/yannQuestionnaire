@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, abort, make_response, request
-from models.models import Questions, Responses, db
+from models.models import Questions, Responses, db, Categories
 from random import randint
 
 app = Flask(__name__)
@@ -37,7 +37,16 @@ def get_questionMath():
     if cat.isdigit() :
         c = questionrepbyCat(cat)
         return jsonify(questions=c)
+    return jsonify(error="No valid category received")
 
+@app.route('/api/1/quiz', methods=['GET'])
+def get_quiz():
+    myCategories = Categories.query.all()
+    questionList = []
+    for i in myCategories:
+        x = questionrepbyCat(i.serialize['id'])
+        questionList.append(x)
+    return jsonify(questions=questionList)
 
 # @app.route('/api/1/users', methods=['POST'])
 # def create_users():
@@ -55,14 +64,14 @@ def responsesbyID(id):
     return [i.serialize for i in Responses.query.filter_by(questionID=id)]
 
 def questionrepbyCat(cat):
-    tableIDQuestMath= []
-    myQuestiosnWithCat = Questions.query.filter_by(categoriesID=mathCatId)
+    tableIDQuestCat= []
+    myQuestiosnWithCat = Questions.query.filter_by(categoriesID=cat)
     for i in myQuestiosnWithCat:
-        tableIDQuestMath.append(i.id)
-    questionToPick = min(len(tableIDQuestMath), 5)
+        tableIDQuestCat.append(i.id)
+    questionToPick = min(len(tableIDQuestCat), 5)
     b = []
     for i in range(0, questionToPick):
-        b.append({'question':questionbyID(tableIDQuestMath[i]), 'responses' : responsesbyID(tableIDQuestMath[0])})
+        b.append({'question':questionbyID(tableIDQuestCat[i]), 'responses' : responsesbyID(tableIDQuestCat[i])})
     return b
 
 
