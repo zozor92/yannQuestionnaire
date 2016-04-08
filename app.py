@@ -31,16 +31,12 @@ def get_onequestion():
 
 
 
-@app.route('/api/1/questionMath', methods=['GET'])
+@app.route('/api/1/questions', methods=['GET'])
 def get_questionMath():
-    c = questionrepbyCat(mathCatId)
-    return jsonify(questions=c)
-
-
-
-@app.route('/api/1/questionStats', methods=['GET'])
-def get_questionStats():
-    return jsonify(questions=[i.serialize for i in Questions.query.filter_by(categoriesID=statsCatId)])
+    cat = request.args.get('category', '')
+    if cat.isdigit() :
+        c = questionrepbyCat(cat)
+        return jsonify(questions=c)
 
 
 # @app.route('/api/1/users', methods=['POST'])
