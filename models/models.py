@@ -4,60 +4,52 @@ db = SQLAlchemy()
 
 class Questions(db.Model):
     __tablename__ = 'questions'
-    id = db.Column('id', db.Integer, primary_key=True)
-    categoriesID = db.Column('categoriesID', db.Integer)
-    questions = db.Column('questions', db.String(120))
-    correctResponseID = db.Column('correctResponseID', db.Integer)
-
-    def __init__(self, questions=None, correctresid=None):
-        self.questions = questions
-        self.correctResponseID = correctresid
-
-    def __repr__(self):
-        return '<Questions %r>' % (self.questions)
+    questionID = db.Column('questionID', db.Integer, primary_key=True)
+    questions = db.Column('question_txt', db.String(120))
+    k_type = db.Column('k_type', db.Integer)
+    k_subtype = db.Column('k_subtype', db.Integer)
+    k_language = db.Column('k_language', db.Integer)
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
-            'id': self.id,
-            'categoriesID': self.categoriesID,
+            'id': self.questionID,
             'questions': self.questions,
-            'correctResponseID': self.correctResponseID
+            'k_type': self.k_type,
+            'k_subtype': self.k_subtype,
+            'k_language': self.k_language
         }
 
 class Responses(db.Model):
     __tablename__ = 'responses'
-    id = db.Column('id', db.Integer, primary_key=True)
-    commentaire = db.Column('commentaire', db.String(120))
+    responseID = db.Column('responseID', db.Integer, primary_key=True)
+    response_txt = db.Column('response_txt', db.String(120))
     questionID = db.Column('questionID', db.Integer)
-
-    def __init__(self, commentaire=None, questionid=None):
-        self.commentaire = commentaire
-        self.questionID = questionid
+    k_correct_ind = db.Column('k_correct_ind', db.Integer)
+    comments_txt = db.Column('comments_txt', db.String(120))
 
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
-            'id': self.id,
-            'commentaire': self.commentaire,
-            'questionID': self.questionID
+            'id': self.responseID,
+            'response_txt': self.response_txt,
+            'questionID': self.questionID,
+            'k_correct_ind': self.k_correct_ind,
+            'comments_txt': self.comments_txt
         }
 
-class Categories(db.Model):
-    __tablename__ = 'categories'
-    id = db.Column('id', db.Integer, primary_key=True)
-    name = db.Column('name', db.String(120))
-
-    def __init__(self, name=None):
-        self.name = name
+class Ref_type(db.Model):
+    __tablename__ = 'ref_type'
+    k_type = db.Column('k_type', db.Integer, primary_key=True)
+    type_txt = db.Column('type_txt', db.String(120))
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
-            'id': self.id,
-            'categoriesID': self.name
+            'k_type': self.k_type,
+            'type_txt': self.type_txt
         }

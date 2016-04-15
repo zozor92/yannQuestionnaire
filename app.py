@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, abort, make_response, request
-from models.models import Questions, Responses, db, Categories
+from models.models import Questions, Responses, db, Ref_type
 from random import randint
 
 app = Flask(__name__)
@@ -25,13 +25,13 @@ def get_onequestion():
     test = Questions.query.all()
     idQuestions = []
     for i in test:
-        idQuestions.append(i.id)
+        idQuestions.append(i.questionID)
     toPick = randint(1, len(idQuestions))
     return jsonify(questions=questionbyID(toPick), responses=responsesbyID(toPick))
 
 
 
-@app.route('/api/1/questions', methods=['GET'])
+@app.route('/api/1/questionsbyCat', methods=['GET'])
 def get_questionMath():
     cat = request.args.get('category', '')
     if cat.isdigit() :
@@ -41,10 +41,10 @@ def get_questionMath():
 
 @app.route('/api/1/quiz', methods=['GET'])
 def get_quiz():
-    myCategories = Categories.query.all()
+    myCategories = Ref_type.query.all()
     questionList = []
     for i in myCategories:
-        x = questionrepbyCat(i.serialize['id'])
+        x = questionrepbyCat(i.serialize['k_type'])
         questionList.append(x)
     return jsonify(questions=questionList)
 
@@ -58,20 +58,19 @@ def get_quiz():
 #    return jsonify(users=[i.serialize for i in Questions.query.all()])
 
 def questionbyID(id):
-    return Questions.query.filter_by(id=id).first().serialize
+    return Questions.query.filter_by(questionID=id).first().serialize
 
 def responsesbyID(id):
     return [i.serialize for i in Responses.query.filter_by(questionID=id)]
 
 def questionrepbyCat(cat):
     tableIDQuestCat= []
-    myQuestiosnWithCat = Questions.query.filter_by(categoriesID=cat)
+    myQuestiosnWithCat = Questions.query.filter_by(k_type=cat)
     for i in myQuestiosnWithCat:
-        tableIDQuestCat.append(i.id)
+        tableIDQuestCat.append(i.questionID)
     questionToPick = min(len(tableIDQuestCat), 5)
     b = []
-    for i in range(0, questionToPick):
-        b.append({'question':questionbyID(tableIDQuestCat[i]), 'responses' : responsesbyID(tableIDQuestCat[i])})
+    for i in range(0, questionToPick):        b.append({'question':questionbyID(tableIDQuestCat[i]), 'responses' : responsesbyID(tableIDQuestCat[i])})
     return b
 
 
